@@ -31,6 +31,14 @@ export interface SoundTrack {
   enabled: boolean;
 }
 
+// Convert a Google Drive share URL (or raw file ID) into a direct-download URL
+// that HTML5 <audio> can stream.
+export function driveAudio(urlOrId: string): string {
+  const match = urlOrId.match(/\/file\/d\/([^/]+)/) ?? urlOrId.match(/[?&]id=([^&]+)/);
+  const id = match ? match[1] : urlOrId;
+  return `https://drive.google.com/uc?export=download&id=${id}`;
+}
+
 const INITIAL_SOUNDS: SoundTrack[] = [
   {
     id: "rain-thunder",
@@ -173,6 +181,14 @@ const INITIAL_SOUNDS: SoundTrack[] = [
     name: "Mountain Wind",
     icon: "mountain",
     src: "/sounds/Tone Glow Libraries - Mountain Wind - Strong Wind Rushing Through Dead Winter Grass.wav",
+    volume: 0.75,
+    enabled: false,
+  },
+  {
+    id: "drive-sound-1",
+    name: "Drive Sound",
+    icon: "default",
+    src: driveAudio("https://drive.google.com/file/d/1ImwJBYEOl8UM3qT0KQzum8eJrmwQgW7e/view?usp=drive_link"),
     volume: 0.75,
     enabled: false,
   },
